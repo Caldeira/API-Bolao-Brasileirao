@@ -15,7 +15,7 @@ export async function isAuthenticated(
   const authHeader = request.headers.authorization;
 
   if (!authHeader) {
-    throw new Error("JWT Token is missing.");
+    throw new Error("JWT Token está faltando.");
   }
   const [, token] = authHeader.split(" ");
 
