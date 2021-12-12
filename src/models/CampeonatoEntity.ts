@@ -1,5 +1,13 @@
 import { StatusAndamento } from "../@types/enums/StatusAndamento";
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { Rodada } from "./RodadaEntity";
 import { Usuario } from "./UsuarioEntity";
 
@@ -18,9 +26,9 @@ export class Campeonato {
   nomePopular: string;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: StatusAndamento,
-    default: StatusAndamento.Agendada
+    default: StatusAndamento.Agendada,
   })
   status: StatusAndamento;
 
@@ -30,9 +38,15 @@ export class Campeonato {
   @Column()
   idCampeonatoApiExterna: number;
 
-  @OneToMany(() => Rodada, rodada => rodada.campeonato)
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+
+  @OneToMany(() => Rodada, (rodada) => rodada.campeonato)
   rodadas: Rodada[];
 
-  @ManyToMany(() => Usuario, usuario => usuario.campeonatos)
+  @ManyToMany(() => Usuario, (usuario) => usuario.campeonatos)
   usuarios: Usuario[];
 }
