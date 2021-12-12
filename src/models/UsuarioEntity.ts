@@ -24,7 +24,7 @@ export class Usuario {
   @Column({ unique: true, nullable: false })
   email: string;
 
-  @Column({ length: 70 })
+  @Column()
   senha: string;
 
   @CreateDateColumn()
