@@ -13,9 +13,12 @@ export class Aposta {
   @Column()
   placarVisitante: number;
 
-  @ManyToOne(() => Usuario, usuario => usuario.apostas)
+  @Column({ nullable: true })
+  pontos?: number;
+
+  @ManyToOne(() => Usuario, (usuario) => usuario.apostas)
   usuario: Usuario;
 
-  @ManyToOne(() => Partida, partida => partida.apostas)
+  @ManyToOne(() => Partida, (partida) => partida.apostas)
   partida: Partida;
 }
