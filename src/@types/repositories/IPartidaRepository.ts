@@ -13,4 +13,5 @@ export interface IPartidaRepository {
   ): Promise<Partida[]>;
   getPartidasDoTime(time: Time, campeonato?: Campeonato): Promise<Partida[]>;
   findByRodadaId(rodadaId: number): Promise<Partida[]>;
+  findbySlug(slugFind: string): Promise<Partida>;
 }
