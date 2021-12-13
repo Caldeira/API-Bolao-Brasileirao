@@ -12,7 +12,7 @@ export class ApostaRepository
       relations: ["partida", "usuario"],
     });
   }
-  findbyUsuarioAndPartida(
+  findByUsuarioAndPartida(
     usuarioId: number,
     partidaId: number
   ): Promise<Aposta> {
@@ -23,7 +23,7 @@ export class ApostaRepository
       },
     });
   }
-  findbyUsuario(usuarioId: number): Promise<Aposta[]> {
+  findByUsuario(usuarioId: number): Promise<Aposta[]> {
     return this.find({ where: { usuario: usuarioId } });
   }
 }
