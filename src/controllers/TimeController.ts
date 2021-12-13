@@ -1,41 +1,35 @@
 import { Inject, Service } from "typedi";
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 import { ITimeService } from "../@types/services/ITimeService";
-import { FiltrosGetPartidas } from "../@types/models/Time";
 
-@Service('TimeController')
+@Service("TimeController")
 export class TimeController {
-  constructor(@Inject('TimeService') private  timeService: ITimeService) {}
+  constructor(@Inject("TimeService") private timeService: ITimeService) {}
 
-  public async partidasMandante(req: Request, res: Response) {
-    const filtros = this.getFilters(req);
-    const timeId = this.getTimeId(req);
-    const partidas = await this.timeService.getPartidasMandante(timeId, filtros);
-    res.send(partidas);
+  async list(request: Request, response: Response) {
+    const times = await this.timeService.listar();
+    response.send(times);
   }
 
-  public async partidasVisitante(req: Request, res: Response) {
-    const filtros = this.getFilters(req);
-    const timeId = this.getTimeId(req);
-    const partidas = await this.timeService.getPartidasVisitante(timeId, filtros);
-    res.send(partidas);
+  async get(request: Request, response: Response) {
+    const time = await this.timeService.buscar(Number(request.params.id));
+    response.send(time);
   }
 
-  public async partidas(req: Request, res: Response) {
-    const filtros = this.getFilters(req);
-    const timeId = this.getTimeId(req);
-    const partidas = await this.timeService.getTodasPartidas(timeId, filtros);
-    res.send(partidas);
+  async create(request: Request, response: Response) {
+    const time = await this.timeService.criar(request.body);
+    response.send(time);
+  }
+  async update(request: Request, response: Response) {
+    const user = await this.timeService.atualizar(
+      Number(request.params.id),
+      request.body
+    );
+    response.send(user);
   }
 
-  private getTimeId(req: Request): number {
-    return Number(req.params.id);
-  }
-
-  private getFilters(req: Request): FiltrosGetPartidas {
-    const campeonatoId = Number(req.query.campeonatoId);
-    return {
-      campeonatoId
-    }
+  async remove(request: Request, response: Response) {
+    await this.timeService.remover(Number(request.params.id));
+    response.send();
   }
 }

@@ -26,7 +26,7 @@ export class ApostaRepository
       },
     });
   }
-  findbyUsuario(usuarioId: number): Promise<Aposta[]> {
+  findByUsuario(usuarioId: number): Promise<Aposta[]> {
     return this.find({ where: { usuario: usuarioId } });
   }
 }

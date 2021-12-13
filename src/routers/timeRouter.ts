@@ -1,16 +1,18 @@
-import { Router } from 'express';
-import Container from 'typedi';
+import { Router } from "express";
+import Container from "typedi";
 const router = Router();
-import { TimeController } from '../controllers/TimeController';
+import { TimeController } from "../controllers/TimeController";
 
 const getController = (): TimeController => {
-  return Container.get<TimeController>('TimeController');
+  return Container.get<TimeController>("TimeController");
 };
 
 const createRouter = () => {
-  router.get('/:id/partidas-mandante', (req, res) => getController().partidasMandante(req, res));
-  router.get('/:id/partidas-visitante', (req, res) => getController().partidasVisitante(req, res));
-  router.get('/:id/partidas', (req, res) => getController().partidas(req, res));
+  router.get("", (req, res) => getController().list(req, res));
+  router.post("", (req, res) => getController().create(req, res));
+  router.get("/:id", (req, res) => getController().get(req, res));
+  router.patch("/:id", (req, res) => getController().update(req, res));
+  router.delete("/:id", (req, res) => getController().remove(req, res));
 
   return router;
 };

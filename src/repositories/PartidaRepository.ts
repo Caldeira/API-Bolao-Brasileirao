@@ -79,7 +79,8 @@ export class PartidaRepository
       where,
     };
   }
-  async findbySlug(slugFind: string): Promise<Partida> {
+
+    async findbySlug(slugFind: string): Promise<Partida> {
     return this.findOne({ where: { slug: slugFind } });
   }
 }

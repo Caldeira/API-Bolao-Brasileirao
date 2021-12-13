@@ -2,6 +2,7 @@ import { Inject, Service } from "typedi";
 import { UsuarioDTO } from "../@types/dto/UsuarioDto";
 import { IUsuarioService } from "../@types/services/IUsuarioService";
 import { IUsuarioRepository } from "../@types/repositories/IUsuarioRepository";
+import { Usuario } from "models/UsuarioEntity";
 import { hash } from "bcrypt";
 
 @Service("UsuarioService")
@@ -18,7 +19,7 @@ export class UsuarioService implements IUsuarioService {
     return this.usuarioRepository.findOne(id);
   }
 
-  async criar(usuarioDto: UsuarioDTO) {
+  async criar(usuarioDto: UsuarioDTO): Promise<Usuario> {
     const emailExists = await this.usuarioRepository.findByEmail(
       usuarioDto.email
     );
@@ -37,7 +38,20 @@ export class UsuarioService implements IUsuarioService {
     return usuario;
   }
 
-  async atualizar(id: number, usuarioDto: UsuarioDTO) {
+  async atualizar(id: number, usuarioDto: UsuarioDTO): Promise<void> {
+    const idExists = await this.usuarioRepository.findOne(id);
+
+    if (!idExists) {
+      throw new Error("Usuário id não encontrado.");
+    }
+
+    const hashedPassword = await hash(usuarioDto.senha, 8);
+
+    this.usuarioRepository.atualizarUsuario(
+      usuarioDto.nome,
+      usuarioDto.email,
+      (usuarioDto.senha = hashedPassword)
+    );
     await this.usuarioRepository.save({ ...usuarioDto, id });
   }
 

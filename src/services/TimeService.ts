@@ -1,42 +1,56 @@
 import { Inject, Service } from "typedi";
 import { ITimeService } from "../@types/services/ITimeService";
-import { IPartidaRepository } from "../@types/repositories/IPartidaRepository";
 import { Time } from "../models/TimeEntity";
-import { Partida } from "models/PartidaEntity";
-import { FiltrosGetPartidas } from "../@types/models/Time";
-import { Campeonato } from "../models/CampeonatoEntity";
+import { ITimeRepository } from "../@types/repositories/ITimeRepository";
+import { TimeDTO } from "../@types/dto/brasileiraoClienteDTO";
 
-@Service('TimeService')
+@Service("TimeService")
 export class TimeService implements ITimeService {
-  constructor(@Inject('PartidaRepository') private partidaRepository: IPartidaRepository) {}
+  constructor(
+    @Inject("TimeRepository") private timeRepository: ITimeRepository
+  ) {}
+  async atualizar(time_id: number, timeDto: TimeDTO): Promise<void> {
+    const idExists = await this.timeRepository.findOne(time_id);
 
-  getPartidasVisitante(timeId: number, filtros: FiltrosGetPartidas): Promise<Partida[]> {
-    const time = this.getTime(timeId);
-    const campeonato = this.getCampeonato(filtros.campeonatoId);
-    return this.partidaRepository.getPartidasDoVisitante(time, campeonato);
+    if (!idExists) {
+      throw new Error("Time id não encontrado.");
+    }
+
+    await this.timeRepository.save({ ...timeDto, time_id });
   }
 
-  getPartidasMandante(timeId: number, filtros: FiltrosGetPartidas): Promise<Partida[]> {
-    const time = this.getTime(timeId);
-    const campeonato = this.getCampeonato(filtros.campeonatoId);
-    return this.partidaRepository.getPartidasDoMandante(time, campeonato);
+  async listar() {
+    return this.timeRepository.find();
   }
 
-  getTodasPartidas(timeId: number, filtros: FiltrosGetPartidas): Promise<Partida[]> {
-    const time = this.getTime(timeId);
-    const campeonato = this.getCampeonato(filtros.campeonatoId);
-    return this.partidaRepository.getPartidasDoTime(time, campeonato);
+  async buscar(id: number) {
+    return this.timeRepository.findOne(id);
+  }
+  async criar(timeDto: TimeDTO): Promise<Time> {
+    const timeExists = await this.timeRepository.findByNome(
+      timeDto.nome_popular
+    );
+
+    if (timeExists) {
+      throw new Error("Time já está cadastrado no sistema.");
+    }
+
+    const time = this.timeRepository.criarTime(
+      timeDto.time_id,
+      timeDto.nome_popular,
+      timeDto.sigla,
+      timeDto.escudo
+    );
+
+    return await this.timeRepository.save(time);
   }
 
-  private getTime(timeId: number): Time {
-    const time = new Time();
-    time.id = timeId;
-    return time;
-  }
+  async remover(id: number): Promise<void> {
+    const timeToRemove = await this.timeRepository.findOne(id);
+    if (!timeToRemove) {
+      throw new Error("Time não encontrado!");
+    }
 
-  private getCampeonato(campeonatoId: number): Campeonato {
-    const campeonato = new Campeonato();
-    campeonato.id = campeonatoId;
-    return campeonato;
+    await this.timeRepository.remove(timeToRemove);
   }
 }
