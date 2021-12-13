@@ -34,12 +34,8 @@ export class Partida {
   })
   visitante: Time;
 
-  @Column({
-    type: "enum",
-    enum: StatusAndamento,
-    default: StatusAndamento.Agendada,
-  })
-  status: StatusAndamento;
+  @Column({ length: 50 })
+  status: string;
 
   @Column({ length: 50, nullable: true })
   slug: string;

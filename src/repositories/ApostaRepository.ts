@@ -7,12 +7,15 @@ export class ApostaRepository
   extends Repository<Aposta>
   implements IApostaRepository
 {
+  findByUsuario(usuarioId: number): Promise<Aposta[]> {
+    throw new Error("Method not implemented.");
+  }
   findAll(): Promise<Aposta[]> {
     return this.find({
       relations: ["partida", "usuario"],
     });
   }
-  findbyUsuarioAndPartida(
+  findByUsuarioAndPartida(
     usuarioId: number,
     partidaId: number
   ): Promise<Aposta> {
