@@ -4,10 +4,10 @@ import { Partida } from "./PartidaEntity";
 @Entity()
 export class Time {
   @PrimaryGeneratedColumn()
-  id: number;
+  time_id: number;
 
   @Column({ length: 50 })
-  nome: string;
+  nome_popular: string;
 
   @Column({ length: 50 })
   sigla: string;
@@ -15,9 +15,9 @@ export class Time {
   @Column({ length: 500 })
   escudo: string;
 
-  @OneToMany(() => Partida, partida => partida.mandante)
+  @OneToMany(() => Partida, (partida) => partida.mandante)
   partidasMandante: Partida[];
 
-  @OneToMany(() => Partida, partida => partida.visitante)
+  @OneToMany(() => Partida, (partida) => partida.visitante)
   partidasVisitante: Partida[];
 }

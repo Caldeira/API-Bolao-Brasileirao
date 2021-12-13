@@ -10,7 +10,18 @@ export class TimeRepository
   async findByNome(nomeTime: string): Promise<Time> {
     return await this.findOne({ where: { nome: nomeTime } });
   }
-  async criarTime(time: Time): Promise<Time> {
-    return await this.save(time);
+  public criarTime(
+    time_id: number,
+    nome_popular: string,
+    sigla: string,
+    escudo: string
+  ): Time {
+    const time = this.create({
+      time_id,
+      nome_popular,
+      sigla,
+      escudo,
+    });
+    return time;
   }
 }
